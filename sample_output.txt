@@ -1,0 +1,86 @@
+2025-12-19T14:41:57.265549 | Model: us.anthropic.claude-sonnet-4-5-20250929-v1:0
+
+[TEST 1] Initial concurrent requests (expect multiple cache writes)
+
+======================================================================
+TEST 1: Concurrent Initial
+======================================================================
+Request 1: latency=3.03s | input=7 | write=2709 | read=0
+Request 2: latency=3.55s | input=7 | write=2709 | read=0
+Request 3: latency=3.64s | input=7 | write=2709 | read=0
+Request 4: latency=3.69s | input=7 | write=2709 | read=0
+Request 5: latency=4.23s | input=7 | write=2709 | read=0
+
+Total cache writes: 13,545
+Total cache reads: 0
+Average latency: 3.63s
+
+[TEST 2] Sequential requests (expect cache reads)
+
+======================================================================
+TEST 2: Sequential After Cache
+======================================================================
+Request 1: latency=2.31s | input=7 | write=0 | read=2709
+Request 2: latency=2.48s | input=7 | write=0 | read=2709
+Request 3: latency=2.88s | input=7 | write=0 | read=2709
+Request 4: latency=2.80s | input=7 | write=0 | read=2709
+Request 5: latency=3.00s | input=7 | write=0 | read=2709
+
+Total cache writes: 0
+Total cache reads: 13,545
+Average latency: 2.70s
+
+[TEST 3] Pre-warm strategy
+Pre-warming...
+Pre-warm: write=0, read=2709
+Concurrent after pre-warm...
+
+======================================================================
+TEST 3: Concurrent After Pre-warm
+======================================================================
+Request 1: latency=2.56s | input=7 | write=0 | read=2709
+Request 2: latency=2.08s | input=7 | write=0 | read=2709
+Request 3: latency=3.19s | input=7 | write=0 | read=2709
+Request 4: latency=3.03s | input=7 | write=0 | read=2709
+Request 5: latency=2.41s | input=7 | write=0 | read=2709
+
+Total cache writes: 0
+Total cache reads: 13,545
+Average latency: 2.65s
+
+[TEST 4] Without caching (baseline)
+
+======================================================================
+TEST 4: No Caching
+======================================================================
+Request 1: latency=2.22s | input=2711 | write=0 | read=0
+Request 2: latency=2.71s | input=2711 | write=0 | read=0
+Request 3: latency=2.36s | input=2711 | write=0 | read=0
+
+Total cache writes: 0
+Total cache reads: 0
+Average latency: 2.43s
+
+[TEST 5] Repeat concurrent (verify cache behavior)
+
+======================================================================
+TEST 5: Concurrent Repeat
+======================================================================
+Request 1: latency=2.91s | input=7 | write=0 | read=2709
+Request 2: latency=3.18s | input=7 | write=0 | read=2709
+Request 3: latency=2.95s | input=7 | write=0 | read=2709
+Request 4: latency=3.54s | input=7 | write=0 | read=2709
+Request 5: latency=2.37s | input=7 | write=0 | read=2709
+
+Total cache writes: 0
+Total cache reads: 13,545
+Average latency: 2.99s
+
+======================================================================
+SUMMARY
+======================================================================
+Test 1 (concurrent initial): Shows multiple cache writes
+Test 2 (sequential): Shows cache reads work
+Test 3 (pre-warm): Shows optimized pattern
+Test 4 (no cache): Shows baseline cost/latency
+Test 5 (concurrent repeat): Shows stable cache behavior
